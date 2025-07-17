@@ -184,3 +184,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+
+# Claude AI assistant configuration
+.claude/
+
