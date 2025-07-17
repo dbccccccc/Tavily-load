@@ -42,8 +42,8 @@ web/.next/
 web/build/
 web/dist/
 *.exe
-tavily-load
-migrate
+/tavily-load
+/migrate
 
 # Environment files
 .env
