@@ -1,0 +1,93 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+docs/
+*.md
+!web/README.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+Jenkinsfile
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs
+logs/
+*.log
+
+# Dependencies (will be installed in container)
+node_modules/
+web/node_modules/
+
+# Build artifacts (will be built in container)
+web/out/
+web/.next/
+web/build/
+web/dist/
+*.exe
+tavily-load
+migrate
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# API Keys
+keys.txt
+
+# Test files
+*_test.go
+**/*_test.go
+coverage.out
+coverage.html
+test-results/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+
+# Docker files (avoid recursion)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Development tools
+Makefile
+forge.yaml
+
+# License and legal
+LICENSE
+COPYING
+
+# Package manager files
+go.sum.backup
+package-lock.json.backup
+
+# Local development
+local/
+dev/
+docker-volumes/

@@ -1,0 +1,46 @@
+# Documentation build outputs
+_build/
+build/
+dist/
+site/
+
+# Sphinx documentation
+docs/_build/
+docs/build/
+
+# MkDocs
+site/
+
+# GitBook
+_book/
+
+# VuePress
+.vuepress/dist
+
+# Docusaurus
+.docusaurus/
+build/
+
+# Generated documentation
+*.html
+*.pdf
+!README.html
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup

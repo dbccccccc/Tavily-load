@@ -1,0 +1,28 @@
+# Backup migration files
+*.sql.bak
+*.sql.backup
+
+# Generated migration files (if auto-generated)
+*_auto_*.sql
+
+# Migration logs
+migration.log
+migrate.log
+
+# Temporary migration files
+*.tmp.sql
+*.temp.sql
+
+# Database dumps
+*.dump
+*.sql.gz
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

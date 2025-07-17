@@ -1,0 +1,130 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: tavily-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: tavily_load
+      MYSQL_USER: tavily_user
+      MYSQL_PASSWORD: tavily_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - tavily-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: tavily-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - tavily-network
+
+  # Main Application
+  tavily-load:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tavily-load
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount environment file (optional, for custom configuration)
+      - ./.env:/app/.env:ro
+      # Mount logs directory (optional, for persistent logs)
+      - ./logs:/app/logs
+      # Keep keys file for migration purposes
+      - ./keys.txt:/app/keys.txt:ro
+    environment:
+      # Database Configuration
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=tavily_user
+      - DB_PASSWORD=tavily_password
+      - DB_NAME=tavily_load
+      - DB_MAX_OPEN_CONNS=25
+      - DB_MAX_IDLE_CONNS=5
+      - DB_CONN_MAX_LIFETIME=300
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=0
+      - REDIS_POOL_SIZE=10
+      # Application Configuration
+      - PORT=3000
+      - HOST=0.0.0.0
+      - LOG_LEVEL=info
+      - LOG_FORMAT=text
+      - ENABLE_CORS=true
+      - ENABLE_GZIP=true
+      - MIGRATE_UP=true
+      - MIGRATION_PATH=migrations
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - tavily-network
+
+  # Optional: Add a reverse proxy (nginx) for production
+  nginx:
+    image: nginx:alpine
+    container_name: tavily-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      # Add SSL certificates if needed
+      # - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - tavily-load
+    restart: unless-stopped
+    networks:
+      - tavily-network
+    profiles:
+      - production
+
+networks:
+  tavily-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  logs:
+    driver: local

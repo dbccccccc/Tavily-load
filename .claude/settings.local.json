@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app:*)",
+      "Bash(ls:*)",
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm init:*)",
+      "Bash(cp:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose:*)",
+      "Bash(curl:*)",
+      "Bash(ss:*)",
+      "Bash(docker run:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker build:*)",
+      "Bash(go get:*)"
+    ],
+    "deny": []
+  }
+}
